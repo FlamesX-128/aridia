@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/FlamesX-128/aridia/src/misc"
+	"github.com/FlamesX-128/aridia/src/tools"
 	"github.com/labstack/echo"
 	"golang.org/x/oauth2"
 )
@@ -28,10 +29,15 @@ func Redirect(ctx echo.Context) (err error) {
 	}
 
 	defer resp.Body.Close()
+	var data string
+
+	if data, err = tools.SerializeToken(token); err != nil {
+		return ctx.String(400, err.Error())
+	}
 
 	ctx.SetCookie(&http.Cookie{
-		MaxAge: int(token.Expiry.Sub(time.Now()).Seconds()),
-		Value:  token.AccessToken,
+		MaxAge: int(time.Until(token.Expiry).Milliseconds()),
+		Value:  data,
 		Name:   "token",
 		Path:   "/",
 	})

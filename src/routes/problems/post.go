@@ -1,8 +1,6 @@
 package problems
 
 import (
-	"log"
-
 	"github.com/FlamesX-128/aridia/src/database"
 	models "github.com/FlamesX-128/aridia/src/models/database"
 	"github.com/labstack/echo"
@@ -11,22 +9,16 @@ import (
 func PostProblem(c echo.Context) (err error) {
 	var problem models.PostProblem
 
+	// Deserialize the problem.
 	if err = c.Bind(&problem); err != nil {
-		log.Println("An error occured while binding the problem: ", err)
-
-		c.JSON(500, map[string]string{
-			"message": err.Error(),
-		})
+		c.JSON(500, map[string]string{"message": err.Error()})
 
 		return
 	}
 
+	// Insert the problem.
 	if err = database.InsertProblem(problem); err != nil {
-		log.Println("An error occured while inserting the problem: ", err)
-
-		c.JSON(500, map[string]string{
-			"message": err.Error(),
-		})
+		c.JSON(500, map[string]string{"message": err.Error()})
 
 		return
 	}

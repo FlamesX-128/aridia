@@ -1,37 +1,64 @@
 package problems
 
 import (
-	"log"
-
 	"github.com/FlamesX-128/aridia/src/database"
-	models "github.com/FlamesX-128/aridia/src/models/database"
+	"github.com/FlamesX-128/aridia/src/middlewares"
+	mdb "github.com/FlamesX-128/aridia/src/models/database"
+	mdc "github.com/FlamesX-128/aridia/src/models/discord"
+	"github.com/FlamesX-128/aridia/src/tools"
 	"github.com/labstack/echo"
+	"golang.org/x/oauth2"
 )
 
-func PutProblem(c echo.Context) (err error) {
-	var problem models.PutProblem
+func PutProblem(ctx echo.Context) (err error) {
+	var data mdc.APIUserResponse
+	var auth *oauth2.Token
+	var new mdb.PutProblem
+	var old mdb.GetProblem
 
-	if err = c.Bind(&problem); err != nil {
-		log.Println("An error occured while binding the problem: ", err)
-
-		c.JSON(500, map[string]string{
-			"message": err.Error(),
-		})
-
-		return
-	}
-
-	if err = database.UpdateProblem(c.Param("id"), problem); err != nil {
-		log.Println("An error occured while updating the problem: ", err)
-
-		c.JSON(500, map[string]string{
-			"message": err.Error(),
-		})
+	// Deserialize the problem.
+	if err = ctx.Bind(&new); err != nil {
+		ctx.JSON(500, map[string]string{"message": err.Error()})
 
 		return
 	}
 
-	return c.JSON(200, map[string]string{
+	// Get the token from the session.
+	if auth, err = tools.GetAuthToken(ctx); err != nil {
+		ctx.JSON(500, map[string]string{"message": err.Error()})
+
+		return
+	}
+
+	// Get the old problem from the database.
+	if old, err = database.GetProblem(new.ID); err != nil {
+		ctx.JSON(500, map[string]string{"message": err.Error()})
+
+		return
+	}
+
+	// Get the owner of the token.
+	if data, _ = middlewares.GetAuthorOfToken(auth, ctx); err != nil {
+		ctx.JSON(500, map[string]string{"message": err.Error()})
+
+		return
+	}
+
+	// Check if the author is the owner of the problem.
+	if data.User.Id != old.AuthorID {
+		ctx.JSON(403, map[string]string{"message": "You are not the author of this problem."})
+
+		return
+	}
+
+	// Update the problem.
+	if err = database.UpdateProblem(new); err != nil {
+		ctx.JSON(500, map[string]string{"message": err.Error()})
+
+		return
+	}
+
+	return ctx.JSON(200, map[string]string{
 		"message": "Problem successfully updated",
 	})
 }

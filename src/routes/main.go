@@ -18,8 +18,12 @@ func SetupRoutes(dirPath string, rPort string, dUri string) error {
 		return err
 	}
 
+	if err := database.Setup(); err != nil {
+		return err
+	}
+
 	// Api routes.
-	api := r.Group("/api", middlewares.Auth)
+	api := r.Group("/api", middlewares.JSON, middlewares.Auth)
 
 	api.GET("/problems/:id", problems.GetProblem)
 	api.PUT("/problems/:id", problems.PutProblem)

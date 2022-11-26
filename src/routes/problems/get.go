@@ -1,8 +1,6 @@
 package problems
 
 import (
-	"log"
-
 	"github.com/FlamesX-128/aridia/src/database"
 	models "github.com/FlamesX-128/aridia/src/models/database"
 	"github.com/labstack/echo"
@@ -11,12 +9,9 @@ import (
 func GetProblems(c echo.Context) (err error) {
 	var problems []models.GetProblem
 
+	// Get the problems.
 	if problems, err = database.GetProblems(); err != nil {
-		log.Println("An error occured while fetching the problems: ", err)
-
-		c.JSON(500, map[string]string{
-			"message": err.Error(),
-		})
+		c.JSON(500, map[string]string{"message": err.Error()})
 
 		return
 	}
@@ -27,12 +22,9 @@ func GetProblems(c echo.Context) (err error) {
 func GetProblem(c echo.Context) (err error) {
 	var problem models.GetProblem
 
+	// Get the problem.
 	if problem, err = database.GetProblem(c.Param("id")); err != nil {
-		log.Println("An error occured while fetching the problem: ", err)
-
-		c.JSON(500, map[string]string{
-			"message": err.Error(),
-		})
+		c.JSON(500, map[string]string{"message": err.Error()})
 
 		return
 	}

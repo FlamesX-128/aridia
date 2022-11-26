@@ -1,8 +1,6 @@
 package database
 
 import (
-	"fmt"
-
 	models "github.com/FlamesX-128/aridia/src/models/database"
 	"github.com/FlamesX-128/aridia/src/tools"
 	r "gopkg.in/rethinkdb/rethinkdb-go.v6"
@@ -14,24 +12,22 @@ func InsertProblem(problem models.PostProblem) (err error) {
 	).Exec(session)
 }
 
-func UpdateProblem(id string, problem models.PutProblem) (err error) {
-	return r.DB("aridia").Table("problems").Get(id).Update(
+func UpdateProblem(problem models.PutProblem) (err error) {
+	return r.DB("aridia").Table("problems").Get(problem.ID).Update(
 		tools.ExtendPutProblem(problem),
 	).Exec(session)
 }
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 func GetProblems() (problems []models.GetProblem, err error) {
-	cursor, err := r.DB("aridia").Table("problems").Run(session)
+	var cursor *r.Cursor
 
-	if err != nil {
-		fmt.Println("An error occured while fetching the problems: ", err)
-
+	if cursor, err = r.DB("aridia").Table("problems").Run(session); err != nil {
 		return
 	}
 
 	if err = cursor.All(&problems); err != nil {
-		fmt.Println("An error occured while decoding the problems: ", err)
-
 		return
 	}
 
@@ -39,15 +35,29 @@ func GetProblems() (problems []models.GetProblem, err error) {
 }
 
 func GetProblem(id string) (problem models.GetProblem, err error) {
-	cursor, err := r.DB("aridia").Table("problems").Get(id).Run(session)
+	var cursor *r.Cursor
 
-	if err != nil {
-
+	if cursor, err = r.DB("aridia").Table("problems").Get(id).Run(session); err != nil {
 		return
 	}
 
 	if err = cursor.One(&problem); err != nil {
+		return
+	}
 
+	return
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+func ExistsProblem(id string) (exists bool, err error) {
+	var cursor *r.Cursor
+
+	if cursor, err = r.DB("aridia").Table("problems").GetAll(id).Count().Eq(1).Run(session); err != nil {
+		return
+	}
+
+	if err = cursor.One(&exists); err != nil {
 		return
 	}
 
