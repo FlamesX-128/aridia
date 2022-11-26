@@ -15,7 +15,15 @@ func Connect(dUri string) (err error) {
 }
 
 func Setup() (err error) {
-	return r.DB("aridia").TableList().Contains("problems").Do(func(x r.Term) r.Term {
+	err = r.DB("aridia").TableList().Contains("problems").Do(func(x r.Term) r.Term {
 		return r.Branch(x, nil, r.DB("aridia").TableCreate("problems"))
+	}).Exec(session)
+
+	if err != nil {
+		return
+	}
+
+	return r.DB("aridia").TableList().Contains("users").Do(func(x r.Term) r.Term {
+		return r.Branch(x, nil, r.DB("aridia").TableCreate("users"))
 	}).Exec(session)
 }

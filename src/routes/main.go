@@ -5,26 +5,34 @@ import (
 	"path"
 
 	"github.com/FlamesX-128/aridia/src/database"
+	"github.com/FlamesX-128/aridia/src/middlewares"
+	"github.com/FlamesX-128/aridia/src/routes/auth"
 	"github.com/FlamesX-128/aridia/src/routes/problems"
 	"github.com/labstack/echo"
 )
 
 func SetupRoutes(dirPath string, rPort string, dUri string) error {
+	r := echo.New()
+
 	if err := database.Connect(dUri); err != nil {
 		return err
 	}
 
-	r := echo.New()
-
 	// Api routes.
-	r.GET("/api/problems/:id", problems.GetProblem)
-	r.PUT("/api/problems/:id", problems.PutProblem)
+	api := r.Group("/api", middlewares.Auth)
 
-	r.POST("/api/problems", problems.PostProblem)
-	r.GET("/api/problems", problems.GetProblems)
+	api.GET("/problems/:id", problems.GetProblem)
+	api.PUT("/problems/:id", problems.PutProblem)
+
+	api.POST("/problems", problems.PostProblem)
+	api.GET("/problems", problems.GetProblems)
 
 	// Static files.
 	r.Static("/public", path.Join(dirPath, "public"))
+
+	// Auth routes.
+	r.GET("/auth/redirect", auth.Redirect)
+	r.GET("/auth", auth.GetAuth)
 
 	// User routes.
 	r.GET("/", func(ctx echo.Context) error {

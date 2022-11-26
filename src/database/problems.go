@@ -42,13 +42,11 @@ func GetProblem(id string) (problem models.GetProblem, err error) {
 	cursor, err := r.DB("aridia").Table("problems").Get(id).Run(session)
 
 	if err != nil {
-		fmt.Println("An error occured while fetching the problem: ", err)
 
 		return
 	}
 
 	if err = cursor.One(&problem); err != nil {
-		fmt.Println("An error occured while decoding the problem: ", err)
 
 		return
 	}
