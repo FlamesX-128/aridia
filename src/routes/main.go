@@ -14,6 +14,7 @@ import (
 func SetupRoutes(dirPath string, rPort string, dUri string) error {
 	r := echo.New()
 
+	// Setup the RethinkDB.
 	if err := database.Connect(dUri); err != nil {
 		return err
 	}

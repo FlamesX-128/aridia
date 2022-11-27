@@ -7,7 +7,7 @@ import (
 )
 
 func GetProblems(c echo.Context) (err error) {
-	var problems []models.GetProblem
+	var problems []models.Post
 
 	// Get the problems.
 	if problems, err = database.GetProblems(); err != nil {
@@ -20,7 +20,7 @@ func GetProblems(c echo.Context) (err error) {
 }
 
 func GetProblem(c echo.Context) (err error) {
-	var problem models.GetProblem
+	var problem models.Post
 
 	// Get the problem.
 	if problem, err = database.GetProblem(c.Param("id")); err != nil {

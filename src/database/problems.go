@@ -2,25 +2,21 @@ package database
 
 import (
 	models "github.com/FlamesX-128/aridia/src/models/database"
-	"github.com/FlamesX-128/aridia/src/tools"
 	r "gopkg.in/rethinkdb/rethinkdb-go.v6"
 )
 
-func InsertProblem(problem models.PostProblem) (err error) {
+func InsertProblem(problem models.Post) (err error) {
 	return r.DB("aridia").Table("problems").Insert(
-		tools.ExtendPostProblem(problem),
-	).Exec(session)
-}
-
-func UpdateProblem(problem models.PutProblem) (err error) {
-	return r.DB("aridia").Table("problems").Get(problem.ID).Update(
-		tools.ExtendPutProblem(problem),
+		problem,
+		r.InsertOpts{
+			Conflict: "update",
+		},
 	).Exec(session)
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-func GetProblems() (problems []models.GetProblem, err error) {
+func GetProblems() (problems []models.Post, err error) {
 	var cursor *r.Cursor
 
 	if cursor, err = r.DB("aridia").Table("problems").Run(session); err != nil {
@@ -34,7 +30,7 @@ func GetProblems() (problems []models.GetProblem, err error) {
 	return
 }
 
-func GetProblem(id string) (problem models.GetProblem, err error) {
+func GetProblem(id string) (problem models.Post, err error) {
 	var cursor *r.Cursor
 
 	if cursor, err = r.DB("aridia").Table("problems").Get(id).Run(session); err != nil {

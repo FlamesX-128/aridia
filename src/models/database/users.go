@@ -1,10 +1,13 @@
 package database
 
+import "golang.org/x/oauth2"
+
 type User struct {
-	Permisson     uint8  `json:"permission"`
-	ID            string `json:"id"`
-	Username      string `json:"username"`
-	Avatar        string `json:"avatar"`
-	Discriminator string `json:"discriminator"`
-	PublicFlags   int    `json:"public_flags"`
+	Id    string `json:"id"`
+	Admin bool   `json:"admin"`
+
+	Auth oauth2.Token `json:"auth"`
+
+	Badges []string `json:"badges"`
+	Posts  []string `json:"posts"`
 }

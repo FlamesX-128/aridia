@@ -13,8 +13,9 @@ import (
 func PutProblem(ctx echo.Context) (err error) {
 	var data mdc.APIUserResponse
 	var auth *oauth2.Token
-	var new mdb.PutProblem
-	var old mdb.GetProblem
+
+	var new mdb.Post
+	var old mdb.Post
 
 	// Deserialize the problem.
 	if err = ctx.Bind(&new); err != nil {
@@ -31,7 +32,7 @@ func PutProblem(ctx echo.Context) (err error) {
 	}
 
 	// Get the old problem from the database.
-	if old, err = database.GetProblem(new.ID); err != nil {
+	if old, err = database.GetProblem(new.Id); err != nil {
 		ctx.JSON(500, map[string]string{"message": err.Error()})
 
 		return
@@ -52,7 +53,7 @@ func PutProblem(ctx echo.Context) (err error) {
 	}
 
 	// Update the problem.
-	if err = database.UpdateProblem(new); err != nil {
+	if err = database.InsertProblem(new); err != nil {
 		ctx.JSON(500, map[string]string{"message": err.Error()})
 
 		return

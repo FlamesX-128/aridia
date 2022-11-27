@@ -25,7 +25,7 @@ func GetAuthorOfToken(auth *oauth2.Token, ctx echo.Context) (author mdc.APIUserR
 func IsAuthorOfProblem(ctx echo.Context, id string) (isAuthor bool, err error) {
 	var auth *oauth2.Token
 	var resp mdc.APIUserResponse
-	var old mdb.GetProblem
+	var old mdb.Post
 
 	// Get the token from the session.
 	if auth, err = tools.GetAuthToken(ctx); err != nil {

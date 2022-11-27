@@ -7,7 +7,7 @@ import (
 )
 
 func PostProblem(c echo.Context) (err error) {
-	var problem models.PostProblem
+	var problem models.Post
 
 	// Deserialize the problem.
 	if err = c.Bind(&problem); err != nil {

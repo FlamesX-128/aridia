@@ -2,18 +2,22 @@ package database
 
 import (
 	mdb "github.com/FlamesX-128/aridia/src/models/database"
+	"github.com/FlamesX-128/aridia/src/tools"
+	"golang.org/x/oauth2"
 	r "gopkg.in/rethinkdb/rethinkdb-go.v6"
 )
 
-func CreateUser(user mdb.User) (err error) {
+func CreateUser(id string, auth oauth2.Token) error {
 	return r.DB("aridia").Table("users").Insert(
-		user,
+		tools.CreateUser(id, auth),
 	).Exec(session)
 }
 
-func UpdateUser(user mdb.User) (err error) {
-	return r.DB("aridia").Table("users").Get(user.ID).Update(
-		user,
+func UpdateUserPost(uId string, pId string) error {
+	return r.DB("aridia").Table("users").Get(uId).Update(
+		map[string]interface{}{
+			"problems": r.Row.Field("problems").Append(pId),
+		},
 	).Exec(session)
 }
 
