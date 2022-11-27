@@ -1,43 +1,57 @@
 package database
 
 import (
-	models "github.com/FlamesX-128/aridia/src/models/database"
+	mdb "github.com/FlamesX-128/aridia/src/models/database"
 	r "gopkg.in/rethinkdb/rethinkdb-go.v6"
 )
 
-func InsertPost(problem models.Post) (err error) {
-	return r.DB("aridia").Table("problems").Insert(
-		problem,
-		r.InsertOpts{
-			Conflict: "update",
+func InsertPost(post mdb.Post) (mdb.Post, error) {
+	rows, err := r.DB("aridia").Table("posts").Insert(
+		post, r.InsertOpts{
+			Conflict:      "update",
+			ReturnChanges: true,
 		},
-	).Exec(session)
+	).Run(session)
+
+	if err != nil {
+		return post, err
+	}
+
+	var nvalue map[string]interface{}
+
+	if err = rows.One(&nvalue); err != nil {
+		return post, err
+	}
+
+	post.Id = nvalue["generated_keys"].([]interface{})[0].(string)
+
+	return post, nil
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-func GetPosts() (problems []models.Post, err error) {
+func GetPosts() (posts []mdb.Post, err error) {
 	var cursor *r.Cursor
 
-	if cursor, err = r.DB("aridia").Table("problems").Run(session); err != nil {
+	if cursor, err = r.DB("aridia").Table("posts").Run(session); err != nil {
 		return
 	}
 
-	if err = cursor.All(&problems); err != nil {
+	if err = cursor.All(&posts); err != nil {
 		return
 	}
 
 	return
 }
 
-func GetPost(id string) (problem models.Post, err error) {
+func GetPost(id string) (post mdb.Post, err error) {
 	var cursor *r.Cursor
 
-	if cursor, err = r.DB("aridia").Table("problems").Get(id).Run(session); err != nil {
+	if cursor, err = r.DB("aridia").Table("posts").Get(id).Run(session); err != nil {
 		return
 	}
 
-	if err = cursor.One(&problem); err != nil {
+	if err = cursor.One(&post); err != nil {
 		return
 	}
 
@@ -49,7 +63,7 @@ func GetPost(id string) (problem models.Post, err error) {
 func ExistsPost(id string) (exists bool, err error) {
 	var cursor *r.Cursor
 
-	if cursor, err = r.DB("aridia").Table("problems").GetAll(id).Count().Eq(1).Run(session); err != nil {
+	if cursor, err = r.DB("aridia").Table("posts").GetAll(id).Count().Eq(1).Run(session); err != nil {
 		return
 	}
 

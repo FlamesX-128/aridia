@@ -40,6 +40,12 @@ func PostProblem(c echo.Context) (err error) {
 		return
 	}
 
+	if !tools.IsExpired(user.LastPost) && !user.Admin {
+		c.JSON(429, map[string]string{"message": "You are posting too fast."})
+
+		return
+	}
+
 	// If the user isn't a admin, he can't set a author id.
 	if !user.Admin {
 		post.AuthorID = resp.User.Id
@@ -50,7 +56,7 @@ func PostProblem(c echo.Context) (err error) {
 	post.Id = ""
 
 	// Insert the problem.
-	if err = database.InsertPost(post); err != nil {
+	if post, err = database.InsertPost(post); err != nil {
 		c.JSON(500, map[string]string{"message": err.Error()})
 
 		return

@@ -2,6 +2,7 @@ package tools
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -13,6 +14,12 @@ func RemoveCookie(w http.ResponseWriter, name string) {
 	}
 
 	http.SetCookie(w, &cookie)
+}
+
+func IsExpired(expires string) bool {
+	end, _ := strconv.Atoi(expires)
+
+	return time.Now().UnixMilli()-int64(end) > 0
 }
 
 func RemoveCookieIfExpired(w http.ResponseWriter, name string, expires string) bool {

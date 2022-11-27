@@ -72,7 +72,7 @@ func PutProblem(ctx echo.Context) (err error) {
 	}
 
 	// Update the post from the database.
-	if err = database.InsertPost(old); err != nil {
+	if _, err = database.InsertPost(old); err != nil {
 		ctx.JSON(500, map[string]string{"message": err.Error()})
 
 		return

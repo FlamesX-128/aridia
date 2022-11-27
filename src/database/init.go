@@ -7,6 +7,8 @@ import (
 var session *r.Session
 
 func Connect(dUri string) (err error) {
+	r.SetTags("rethinkdb", "json")
+
 	session, err = r.Connect(r.ConnectOpts{
 		Address: dUri,
 	})
@@ -15,8 +17,9 @@ func Connect(dUri string) (err error) {
 }
 
 func Setup() (err error) {
-	err = r.DB("aridia").TableList().Contains("problems").Do(func(x r.Term) r.Term {
-		return r.Branch(x, nil, r.DB("aridia").TableCreate("problems"))
+
+	err = r.DB("aridia").TableList().Contains("posts").Do(func(x r.Term) r.Term {
+		return r.Branch(x, nil, r.DB("aridia").TableCreate("posts"))
 	}).Exec(session)
 
 	if err != nil {

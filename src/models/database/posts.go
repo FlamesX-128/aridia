@@ -7,22 +7,22 @@ const (
 )
 
 type Step struct {
-	Name string `json:"name"`
-	Desc string `json:"desc"`
+	Name string `json:"name" rethinkdb:"name,omitempty"`
+	Desc string `json:"desc" rethinkdb:"desc"`
 
-	ImageURL string `json:"image_url"`
-	Number   string `json:"number"`
+	ImageURL string `json:"image_url" rethinkdb:"image_url"`
+	Number   string `json:"number" rethinkdb:"number,omitempty"`
 }
 
 type Post struct {
-	Id    string `json:"id"`
-	Title string `json:"title"`
-	Desc  string `json:"desc"`
+	Id    string `json:"id" rethinkdb:"id,omitempty"`
+	Title string `json:"title" rethinkdb:"title,omitempty"`
+	Desc  string `json:"desc" rethinkdb:"desc,omitempty"`
 
-	Answer string `json:"answer"`
-	Check  string `json:"check"`
-	Steps  []Step `json:"steps"`
+	Answer string `json:"answer" rethinkdb:"answer,omitempty"`
+	Check  string `json:"check" rethinkdb:"check,omitempty"`
+	Steps  []Step `json:"steps" rethinkdb:"steps"`
 
-	CreatedAt string `json:"created_at"`
-	AuthorID  string `json:"author_id"`
+	CreatedAt string `json:"created_at" rethinkdb:"created_at,omitempty"`
+	AuthorID  string `json:"author_id" rethinkdb:"author_id,omitempty"`
 }
