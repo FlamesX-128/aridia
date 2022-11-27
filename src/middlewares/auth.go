@@ -42,7 +42,7 @@ func IsAuthorOfProblem(ctx echo.Context, id string) (isAuthor bool, err error) {
 	}
 
 	// Get the problem from the database.
-	if old, err = database.GetProblem(id); err != nil {
+	if old, err = database.GetPost(id); err != nil {
 		ctx.JSON(500, map[string]string{"message": err.Error()})
 
 		return

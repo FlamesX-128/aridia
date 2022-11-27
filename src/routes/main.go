@@ -7,7 +7,8 @@ import (
 	"github.com/FlamesX-128/aridia/src/database"
 	"github.com/FlamesX-128/aridia/src/middlewares"
 	"github.com/FlamesX-128/aridia/src/routes/auth"
-	"github.com/FlamesX-128/aridia/src/routes/problems"
+	"github.com/FlamesX-128/aridia/src/routes/posts"
+	"github.com/FlamesX-128/aridia/src/routes/users"
 	"github.com/labstack/echo"
 )
 
@@ -26,11 +27,14 @@ func SetupRoutes(dirPath string, rPort string, dUri string) error {
 	// Api routes.
 	api := r.Group("/api", middlewares.JSON, middlewares.Auth)
 
-	api.GET("/problems/:id", problems.GetProblem)
-	api.PUT("/problems/:id", problems.PutProblem)
+	api.GET("/post/:id", posts.GetProblem)
+	api.PUT("/post/:id", posts.PutProblem)
 
-	api.POST("/problems", problems.PostProblem)
-	api.GET("/problems", problems.GetProblems)
+	api.POST("/posts", posts.PostProblem)
+	api.GET("/posts", posts.GetProblems)
+
+	api.GET("/user/:id", users.GetUser)
+	api.GET("/users", users.GetUsers)
 
 	// Static files.
 	r.Static("/public", path.Join(dirPath, "public"))

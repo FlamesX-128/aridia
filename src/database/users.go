@@ -14,17 +14,36 @@ func CreateUser(id string, auth oauth2.Token) error {
 }
 
 func UpdateUserPost(uId string, pId string) error {
-	return r.DB("aridia").Table("users").Get(uId).Update(
-		map[string]interface{}{
-			"problems": r.Row.Field("problems").Append(pId),
-		},
-	).Exec(session)
+	return r.DB("aridia").Table("users").Filter(map[string]string{
+		"Id": uId,
+	}).Update(map[string]interface{}{
+		"Posts": r.Row.Field("Posts").Append(pId),
+	}).Exec(session)
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+func GetUsers() (users []mdb.SimplifiedUser, err error) {
+	var cursor *r.Cursor
+
+	if cursor, err = r.DB("aridia").Table("users").Run(session); err != nil {
+		return
+	}
+
+	if err = cursor.All(&users); err != nil {
+		return
+	}
+
+	return
 }
 
 func GetUser(id string) (user mdb.User, err error) {
 	var cursor *r.Cursor
 
-	if cursor, err = r.DB("aridia").Table("users").Get(id).Run(session); err != nil {
+	// the id is not a uuid, so we need to get the user by the id field
+	if cursor, err = r.DB("aridia").Table("users").Filter(map[string]string{
+		"Id": id,
+	}).Run(session); err != nil {
 		return
 	}
 

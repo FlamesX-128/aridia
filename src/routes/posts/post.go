@@ -1,4 +1,4 @@
-package problems
+package posts
 
 import (
 	"github.com/FlamesX-128/aridia/src/database"
@@ -50,13 +50,20 @@ func PostProblem(c echo.Context) (err error) {
 	post.Id = ""
 
 	// Insert the problem.
-	if err = database.InsertProblem(post); err != nil {
+	if err = database.InsertPost(post); err != nil {
+		c.JSON(500, map[string]string{"message": err.Error()})
+
+		return
+	}
+
+	// Update user posts.
+	if err = database.UpdateUserPost(resp.User.Id, post.Id); err != nil {
 		c.JSON(500, map[string]string{"message": err.Error()})
 
 		return
 	}
 
 	return c.JSON(200, map[string]string{
-		"message": "Problem successfully created",
+		"message": "Post successfully created",
 	})
 }

@@ -1,4 +1,4 @@
-package problems
+package posts
 
 import (
 	"github.com/FlamesX-128/aridia/src/database"
@@ -33,7 +33,7 @@ func PutProblem(ctx echo.Context) (err error) {
 	}
 
 	// Get the old problem from the database.
-	if old, err = database.GetProblem(new.Id); err != nil {
+	if old, err = database.GetPost(new.Id); err != nil {
 		ctx.JSON(500, map[string]string{"message": err.Error()})
 
 		return
@@ -72,7 +72,7 @@ func PutProblem(ctx echo.Context) (err error) {
 	}
 
 	// Update the post from the database.
-	if err = database.InsertProblem(old); err != nil {
+	if err = database.InsertPost(old); err != nil {
 		ctx.JSON(500, map[string]string{"message": err.Error()})
 
 		return

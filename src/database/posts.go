@@ -5,7 +5,7 @@ import (
 	r "gopkg.in/rethinkdb/rethinkdb-go.v6"
 )
 
-func InsertProblem(problem models.Post) (err error) {
+func InsertPost(problem models.Post) (err error) {
 	return r.DB("aridia").Table("problems").Insert(
 		problem,
 		r.InsertOpts{
@@ -16,7 +16,7 @@ func InsertProblem(problem models.Post) (err error) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-func GetProblems() (problems []models.Post, err error) {
+func GetPosts() (problems []models.Post, err error) {
 	var cursor *r.Cursor
 
 	if cursor, err = r.DB("aridia").Table("problems").Run(session); err != nil {
@@ -30,7 +30,7 @@ func GetProblems() (problems []models.Post, err error) {
 	return
 }
 
-func GetProblem(id string) (problem models.Post, err error) {
+func GetPost(id string) (problem models.Post, err error) {
 	var cursor *r.Cursor
 
 	if cursor, err = r.DB("aridia").Table("problems").Get(id).Run(session); err != nil {
@@ -46,7 +46,7 @@ func GetProblem(id string) (problem models.Post, err error) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-func ExistsProblem(id string) (exists bool, err error) {
+func ExistsPost(id string) (exists bool, err error) {
 	var cursor *r.Cursor
 
 	if cursor, err = r.DB("aridia").Table("problems").GetAll(id).Count().Eq(1).Run(session); err != nil {
