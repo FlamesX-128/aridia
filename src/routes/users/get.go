@@ -32,6 +32,5 @@ func GetUser(c echo.Context) (err error) {
 	return c.JSON(200, mdb.SimplifiedUser{
 		Id:     user.Id,
 		Badges: user.Badges,
-		Posts:  user.Posts,
 	})
 }

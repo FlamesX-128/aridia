@@ -45,7 +45,7 @@ func SetupRoutes(dirPath string, rPort string, dUri string) error {
 
 	// User routes.
 	r.GET("/", func(ctx echo.Context) error {
-		return ctx.File(path.Join(dirPath, "templates", "home.html"))
+		return ctx.File(path.Join(dirPath, "views", "home.html"))
 	})
 
 	log.Println("Listening on port ", rPort)

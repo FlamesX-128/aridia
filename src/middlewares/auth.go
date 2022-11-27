@@ -3,6 +3,7 @@ package middlewares
 import (
 	"errors"
 	"net/http"
+	"os"
 
 	"github.com/FlamesX-128/aridia/src/database"
 	"github.com/FlamesX-128/aridia/src/discord"
@@ -82,6 +83,10 @@ func IsAuthenticated(ctx echo.Context) (ok bool, err error) {
 
 func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
+		if value := ctx.Param("token"); value == os.Getenv("AUTH_TOKEN") {
+			return next(ctx)
+		}
+
 		if ok, err := IsAuthenticated(ctx); err != nil || !ok {
 			return ctx.Redirect(http.StatusTemporaryRedirect, "/auth")
 		}

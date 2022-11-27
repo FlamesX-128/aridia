@@ -1,8 +1,6 @@
 package database
 
 import (
-	"time"
-
 	mdb "github.com/FlamesX-128/aridia/src/models/database"
 	"github.com/FlamesX-128/aridia/src/tools"
 	"golang.org/x/oauth2"
@@ -13,15 +11,6 @@ func CreateUser(id string, auth oauth2.Token) error {
 	return r.DB("aridia").Table("users").Insert(
 		tools.CreateUser(id, auth),
 	).Exec(session)
-}
-
-func UpdateUserPost(uId string, pId string) error {
-	time := time.Now().UnixMilli() //+ (1000 * 60 * 60 * 24)
-
-	return r.DB("aridia").Table("users").Get(uId).Update(map[string]interface{}{
-		"last_post": time,
-		"posts":     r.Row.Field("posts").Append(pId),
-	}).Exec(session)
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

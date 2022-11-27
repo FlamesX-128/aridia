@@ -16,7 +16,6 @@ type User struct {
 	Auth oauth2.Token `json:"auth" rethinkdb:"auth,omitempty"`
 
 	Badges []string `json:"badges" rethinkdb:"badges"`
-	Posts  []string `json:"posts" rethinkdb:"posts"`
 
 	LastPost string `json:"last_post" rethinkdb:"last_post"`
 }

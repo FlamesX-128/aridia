@@ -11,6 +11,5 @@ func CreateUser(id string, auth oauth2.Token) mdb.User {
 		Admin:  false,
 		Auth:   auth,
 		Badges: []string{},
-		Posts:  []string{},
 	}
 }

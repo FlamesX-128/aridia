@@ -1,6 +1,8 @@
 package database
 
 import (
+	"os"
+
 	r "gopkg.in/rethinkdb/rethinkdb-go.v6"
 )
 
@@ -10,7 +12,7 @@ func Connect(dUri string) (err error) {
 	r.SetTags("rethinkdb", "json")
 
 	session, err = r.Connect(r.ConnectOpts{
-		Address: dUri,
+		Address: os.Getenv("DATABASE_URI"),
 	})
 
 	return
