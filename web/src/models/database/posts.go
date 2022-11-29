@@ -3,7 +3,7 @@ package database
 const (
 	COMMUNITY = "community" // Created by the community, but verified by the Aridia team.
 	OFFICIAL  = "official"  // Created by the Aridia team.
-	NONE      = "none"      // Created by the community, but not verified by the Aridia team.
+	NONE      = ""          // Created by the community, but not verified by the Aridia team.
 )
 
 type Step struct {

@@ -7,9 +7,11 @@ import (
 
 func CreateUser(id string, auth oauth2.Token) mdb.User {
 	return mdb.User{
-		Id:     id,
-		Admin:  false,
-		Auth:   auth,
-		Badges: []string{},
+		Id:       id,
+		Admin:    false,
+		Auth:     auth,
+		Badges:   []string{},
+		Solved:   []string{},
+		LastPost: "0",
 	}
 }

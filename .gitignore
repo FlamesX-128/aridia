@@ -1,3 +1,5 @@
-public
-
+dist
 .env
+
+*.css
+*.js

@@ -13,9 +13,9 @@ type User struct {
 	Id    string `json:"id" rethinkdb:"id,omitempty"`
 	Admin bool   `json:"admin" rethinkdb:"admin"`
 
-	Auth oauth2.Token `json:"auth" rethinkdb:"auth,omitempty"`
+	LastPost string       `json:"last_post" rethinkdb:"last_post"`
+	Auth     oauth2.Token `json:"auth" rethinkdb:"auth,omitempty"`
 
 	Badges []string `json:"badges" rethinkdb:"badges"`
-
-	LastPost string `json:"last_post" rethinkdb:"last_post"`
+	Solved []string `json:"solved" rethinkdb:"solved"`
 }

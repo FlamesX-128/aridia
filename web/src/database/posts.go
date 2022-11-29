@@ -30,10 +30,10 @@ func InsertPost(post mdb.Post) (mdb.Post, error) {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-func GetPosts() (posts []mdb.Post, err error) {
+func GetPosts(filter map[string]interface{}) (posts []mdb.Post, err error) {
 	var cursor *r.Cursor
 
-	if cursor, err = r.DB("aridia").Table("posts").Run(session); err != nil {
+	if cursor, err = r.DB("aridia").Table("posts").Filter(filter).Run(session); err != nil {
 		return
 	}
 
